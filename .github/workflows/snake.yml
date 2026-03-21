@@ -3,43 +3,38 @@ name: Generate Snake
 # ตั้งเวลาให้รันอัตโนมัติ
 on:
   schedule:
-    # รันทุกๆ เที่ยงคืน
     - cron: "0 0 * * *" 
-  
-  # อนุญาตให้กดปุ่มรันเองได้บนหน้าเว็บ
   workflow_dispatch:
-  
-  # รันทุกครั้งที่มีการ Push โค้ดขึ้น Branch main หรือ master
   push:
     branches:
     - main
     - master
 
+# 🛠️ เพิ่มบรรทัดนี้เพื่อแก้ Warning (บังคับใช้ Node.js 24)
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   generate:
-    # กำหนดสิทธิ์ให้ Action นี้สามารถเขียนไฟล์ลง Repo ได้
     permissions: 
       contents: write
     runs-on: ubuntu-latest
     timeout-minutes: 5
     
     steps:
-      # Step 1: สร้างไฟล์เจ้างูแบบ SVG
       - name: generate github-contribution-grid-snake.svg
         uses: Platane/snk/svg-only@v3
         with:
-          # ดึงชื่อ Username (iots1) มาใช้อัตโนมัติ
           github_user_name: ${{ github.repository_owner }}
-          # สร้างทั้งโหมดสว่างและโหมดมืด
           outputs: |
             dist/github-snake.svg
             dist/github-snake-dark.svg?palette=github-dark
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
-      # Step 2: อัปโหลดภาพไปเก็บไว้ที่ Branch ที่ชื่อ "output"
       - name: push github-contribution-grid-snake.svg to the output branch
-        uses: crazy-max/ghaction-github-pages@v3.1.0
+        # 🛠️ อัปเดตเวอร์ชันของ Action ตัวนี้ให้ใหม่ขึ้นเป็น v4
+        uses: crazy-max/ghaction-github-pages@v4
         with:
           target_branch: output
           build_dir: dist
