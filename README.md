@@ -20,6 +20,7 @@ const profile: Developer = {
 };
 
 console.log(profile);
+```
 
 
 ### 👾 `contribution_graph.exe`
