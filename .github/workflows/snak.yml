@@ -1,0 +1,35 @@
+name: Generate Snake
+
+# ตั้งเวลาให้รันอัตโนมัติ
+on:
+  schedule:
+    # รันทุกๆ เที่ยงคืน (เวลา UTC)
+    - cron: "0 0 * * *" 
+  # อนุญาตให้เรากดรันเองได้ด้วยปุ่มบนหน้าเว็บ
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Checkout repo
+      - uses: actions/checkout@v3
+      
+      # Step 2: สร้างเจ้างู
+      - uses: Platane/snk@v3
+        with:
+          # ดึงชื่อ Username เรามาใช้อัตโนมัติ
+          github_user_name: ${{ github.repository_owner }}
+          # สร้างไฟล์ภาพ 2 แบบ (สว่าง และ มืด)
+          outputs: |
+            dist/github-snake.svg
+            dist/github-snake-dark.svg?palette=github-dark
+
+      # Step 3: อัปโหลดภาพงูไปเก็บไว้ที่ Branch ใหม่ชื่อ "output"
+      - name: Push to GitHub
+        uses: crazy-max/ghaction-github-pages@v3.1.0
+        with:
+          target_branch: output
+          build_dir: dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
