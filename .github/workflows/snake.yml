@@ -10,9 +10,10 @@ on:
     - main
     - master
 
-# 🛠️ เพิ่มบรรทัดนี้เพื่อแก้ Warning (บังคับใช้ Node.js 24)
+# 🛠️ Force Node.js 24 เพื่อแก้ deprecation warning
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  ACTIONS_ALLOW_UNSECURE_NODE_VERSION: true
 
 jobs:
   generate:
@@ -22,6 +23,9 @@ jobs:
     timeout-minutes: 5
     
     steps:
+      - name: checkout repo
+        uses: actions/checkout@v4
+
       - name: generate github-contribution-grid-snake.svg
         uses: Platane/snk/svg-only@v3
         with:
