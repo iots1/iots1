@@ -7,6 +7,7 @@
 ---
 
 ### 👨‍💻 `whoami`
+#### [Get to know me](https://iots1.github.io/me/)
 
 ```typescript
 import { Developer } from '@core/interfaces';
